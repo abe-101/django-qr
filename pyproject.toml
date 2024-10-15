@@ -1,0 +1,157 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = [ "poetry-core>=1.0.0" ]
+
+[tool.poetry]
+name = "django-qr"
+version = "0.0.0"
+description = "Generate and manage QR codes that redirect to specific views in your Django project"
+authors = [ "Abe Hanoka <abe@habet.dev>" ]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/abe-101/django-qr"
+documentation = "https://django-qr.readthedocs.io"
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Framework :: Django",
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.0",
+  "Framework :: Django :: 5.1",
+  "Topic :: Software Development :: Libraries",
+]
+packages = [
+  { include = "django_qr", from = "src" },
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/abe-101/django-qr/issues"
+"Changelog" = "https://github.com/abe-101/django-qr/blob/main/CHANGELOG.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = ">=4.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-cov = "^5.0.0"
+pytest-django = "^4.5"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+myst-parser = { version = ">=0.16", python = ">=3.11" }
+sphinx = { version = ">=4.0", python = ">=3.11" }
+furo = { version = ">=2023.5.20", python = ">=3.11" }
+sphinx-autobuild = { version = ">=2024.0.0", python = ">=3.11" }
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+lint.select = [
+  "B",   # flake8-bugbear
+  "D",   # flake8-docstrings
+  "C4",  # flake8-comprehensions
+  "S",   # flake8-bandit
+  "F",   # pyflake
+  "E",   # pycodestyle
+  "W",   # pycodestyle
+  "UP",  # pyupgrade
+  "I",   # isort
+  "RUF", # ruff specific
+]
+lint.ignore = [
+  "D203", # 1 blank line required before class docstring
+  "D212", # Multi-line docstring summary should start at the first line
+  "D100", # Missing docstring in public module
+  "D104", # Missing docstring in public package
+  "D107", # Missing docstring in `__init__`
+  "D401", # First line of docstring should be in imperative mood
+]
+lint.per-file-ignores."conftest.py" = [ "D100" ]
+lint.per-file-ignores."docs/conf.py" = [ "D100" ]
+lint.per-file-ignores."setup.py" = [ "D100" ]
+lint.per-file-ignores."tests/**/*" = [
+  "D100",
+  "D101",
+  "D102",
+  "D103",
+  "D104",
+  "S101",
+]
+lint.isort.known-first-party = [ "django_qr", "tests" ]
+
+[tool.pytest.ini_options]
+addopts = """\
+    -v
+    -Wdefault
+    --cov=django_qr
+    --cov-report=term
+    --cov-report=xml
+    --ds=tests.settings
+    """
+pythonpath = [ "src" ]
+django_find_project = false
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "@overload",
+  "if TYPE_CHECKING",
+  "raise NotImplementedError",
+  'if __name__ == "__main__":',
+]
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+mypy_path = "src/"
+no_implicit_optional = true
+show_error_codes = true
+warn_unreachable = true
+warn_unused_ignores = true
+exclude = [
+  'docs/.*',
+  'setup.py',
+]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+allow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "docs.*"
+ignore_errors = true
+
+[tool.semantic_release]
+version_toml = [ "pyproject.toml:tool.poetry.version" ]
+version_variables = [
+  "src/django_qr/__init__.py:__version__",
+  "docs/conf.py:release",
+]
+build_command = "pip install poetry && poetry build"
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = [
+  "chore.*",
+  "ci.*",
+  "Merge pull request .*",
+]
+
+[tool.semantic_release.changelog.environment]
+keep_trailing_newline = true
+
+[tool.semantic_release.branches.main]
+match = "main"
+
+[tool.semantic_release.branches.noop]
+match = "(?!main$)"
+prerelease = true
