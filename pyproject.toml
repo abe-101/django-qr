@@ -33,6 +33,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.8"
 django = ">=4.2"
+segno = "^1.6.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
@@ -71,6 +72,9 @@ lint.ignore = [
   "D107", # Missing docstring in `__init__`
   "D401", # First line of docstring should be in imperative mood
 ]
+lint.exclude = [
+  "*/*/migrations/*",  # Exclude all migration files
+]
 lint.per-file-ignores."conftest.py" = [ "D100" ]
 lint.per-file-ignores."docs/conf.py" = [ "D100" ]
 lint.per-file-ignores."setup.py" = [ "D100" ]
@@ -80,7 +84,7 @@ lint.per-file-ignores."tests/**/*" = [
   "D102",
   "D103",
   "D104",
-  "S101",
+  "S10",
 ]
 lint.isort.known-first-party = [ "django_qr", "tests" ]
 
@@ -129,6 +133,10 @@ allow_untyped_defs = true
 
 [[tool.mypy.overrides]]
 module = "docs.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "django_qr.migrations.*"
 ignore_errors = true
 
 [tool.semantic_release]
