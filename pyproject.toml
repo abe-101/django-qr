@@ -4,7 +4,7 @@ requires = [ "poetry-core>=1.0.0" ]
 
 [tool.poetry]
 name = "django-qr"
-version = "0.1.0"
+version = "0.2.0"
 description = "Generate and manage QR codes that redirect to specific views in your Django project"
 authors = [ "Abe Hanoka <abe@habet.dev>" ]
 license = "MIT"
